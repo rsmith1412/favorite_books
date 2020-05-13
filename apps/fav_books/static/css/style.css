@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 40px;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    background-color: navy;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+header a {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+main {
+    margin: 20px;
+    display: flex;
+}
+.new_book_form {
+    width: 90%;
+    margin: 0 auto;
+}
+.books {
+    margin-bottom: 20px;
+}
+.books p {
+    margin: 0;
+}
+.desc {
+    display: flex;
+    margin-bottom: 10px;
+}
+.desc textarea {
+    margin-left: 20px;
+}
+.delete_book {
+    padding: 10px;
+    color: white;
+    background-color: darkred;
+    border-radius: 5px;
+}

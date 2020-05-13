@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{book.title}}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome {{user.first_name}}!</h1>
+        <a href="/books">All Books</a>
+        <a href="/logout">Logout</a>
+    </header>
+    <main>
+        <div class="add_book col-6">
+            {% if user.id == book.uploaded_by.id %}
+                <form action="/books/{{book.id}}/edit" class="edit_book_form" id="edit" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="title" value="{{book.title}}">
+                    <p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p>
+                    <p>Added on: {{book.created_at}}</p>
+                    <p>Last updated on: {{book.updated_at}}</p>
+                    <div class="desc">
+                        <p>Description: </p>
+                        <textarea rows="4" cols="50" name="desc" form="edit"> {{book.description}}</textarea>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Update">
+                </form>
+                <a href="/books/{{book.id}}/delete" class="delete_book">Delete Book</a>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.extra_tags == "update" %}
+                        <p style="color: red">{{message}}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <h3>{{book.title}}</h3>
+                <p>Added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}}</p>
+                <p>Added on: {{book.created_at}}</p>
+                <p>Last updated on: {{book.updated_at}}</p>
+                <p>Description: {{book.description}}</p>
+            {% endif %}
+        </div>
+        <div class="users_book col-6">
+            <h2>Users Who Like This Book</h2>
+            <ul>
+            {% for this_user in book.users_who_like.all %}
+                {% if user.id == this_user.id %}
+                    <li>{{this_user.first_name}} {{this_user.last_name}} <a href="/books/{{book.id}}/unfavorite">Unfavorite</a></li>
+                {% else %}
+                    <li>{{this_user.first_name}} {{this_user.last_name}}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            {% if not user in book.users_who_like.all %}
+                <a href="/books/{{book.id}}/favorite">Add to Favorite</a>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

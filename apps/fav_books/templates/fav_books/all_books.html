@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Books</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Welcome {{user.first_name}}!</h1>
+        <a href="/logout">Logout</a>
+    </header>
+    <main>
+        <div class="add_book col-6">
+            <form action="/add_book" class="new_book_form" method="POST">
+                {% csrf_token %}
+                <h2>Add a Favorite Book</h2>
+                <p>Title <input type="text" name="title"></p>
+                <p>Description <input type="text" name="desc"></p>
+                <input type="submit" class="btn btn-primary" value="Add">
+            </form>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.extra_tags == "book" %}
+                    <p style="color: red">{{message}}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="all_books col-6">
+            <h2>All Books</h2>
+            {% for book in books %}
+                <div class="books">
+                    <a href="/books/{{book.id}}">{{book.title}}</a>
+                    <p>(added by {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}})</p>
+                    {% if user in book.users_who_like.all %}
+                        <p style="font-style: italic">this is one of your favorites</p>
+                    {% else %}
+                        <a href="/books/{{book.id}}/favorite">Add To Favorites</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
